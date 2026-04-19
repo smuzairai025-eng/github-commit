@@ -1,0 +1,33 @@
+name: Auto Commit Bot
+
+on:
+  schedule:
+    # Runs at minute 0 past every hour from 9 through 18 UTC (10 times a day)
+    - cron: '0 9-18 * * *'
+  
+  # This allows you to trigger the script manually from the GitHub UI for testing
+  workflow_dispatch: 
+
+permissions:
+  contents: write
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update dummy file
+        run: |
+          echo "Automated commit via GitHub Actions at: $(date)" >> dummy_log.txt
+
+      - name: Commit and push changes
+        run: |
+          # CHANGE THESE TWO LINES:
+          git config --global user.name "smuzairai025-eng"
+          git config --global user.email "smuzairai025@gmail.com"
+          
+          git add dummy_log.txt
+          git commit -m "chore: automated daily commit"
+          git push
